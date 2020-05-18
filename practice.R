@@ -1185,5 +1185,49 @@ quantile(weight.heavy)               # 최소값 ~ 최대값(0%,25%,50%,75%,100%
 quantile(weight.heavy,(0:10)/ 10)
 # (0:10) / 10 : 구간을 몇개로 나눌것인지를 지정
 # 0.1 ~ 1.0 사이 백분율로 10% ~ 100%
-summary(weight.heavy)
+summary(weight.heavy)                      # 사분위수 + 중앙값 + 평균
 
+# 산포
+# 분산
+var(weight)
+
+# 표준편차
+sd(weight)
+
+# 값의 범위(최소값과 최대값)
+range(weight)
+
+# 최대값과 최소값의 차이
+diff(range(weight))
+
+# 연속형 자료 시각화
+# Histogram : 연속형 자료의 분포를 시각화하는 도구            # 막대그래프와 비슷하지만, 서로 붙어있음.
+#             연속형 자료에서의 구간을 나누고 구간에 속한       막대그래프와 혼동하지 않도록 해야함.
+#             값들의 개수를 세는 방법으로 사용
+
+class(cars)
+str(cars)
+
+dist <- cars[,2]
+dist
+boxplot.stats(dist) # 구체적인 값을 파악 할 때 사용
+                    # status : 사분위수
+                    # $n : 관측값의 수(데이터 수)
+                    # $conf : 중앙값에 대한 신뢰구간
+                    # $out : 특이값(이상치)목록
+
+hist(dist, main = "Histogram for 제동거리",  # main : 제목, xlab : x축 이름, ylab :  y축 이름
+     xlab = "제동거리",ylab = '빈도수',      # border : 바탕색, col : 본색
+     border = 'brown', col='violet',           # las : x축 방향(1or2), breaks : 간격
+     las=1,breaks=5)
+
+# 상자 그림(boxplot, 상자 수영 그래프)
+# 사분위수를 그래프형태로 시각화하는 도구
+# 상자그래프는 하나의 그래프로 데이터의 분포
+# 형태를 포함한 다양한 정보를 전달
+# - 자료의 전반적인 분포를 이해하는데 도움
+# - 구체적인 최소,최대,중앙값을 알기는 어렵다.
+
+boxplot(dist,main = '자동차 제동거리 ')   # 박스 중간 굵은선 : 중앙값, 박스하단선 : 1사분위
+                                          # 박스 상단선 : 3사분위, 맨위에 동그라미 : 특이값(개수마다 찍힘)
+                                          # 구체적인 값은 알 수가 없다.
