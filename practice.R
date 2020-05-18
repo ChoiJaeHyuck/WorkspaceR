@@ -1101,9 +1101,9 @@ favorite <- c( 'WINTER', 'SUMMER', 'SPRING',
               'FALL', 'SUMMER', 'SPRING', 'SPRING')
 favorite
 
-class( favorite )  #type
-str( favorite )    #내부 구조 
-dim( favorite )    #data 수
+class( favorite )  # type
+str( favorite )    # 내부 구조 
+dim( favorite )    # data 수
 
 
 #도수 분포표 작성
@@ -1158,6 +1158,32 @@ pie( ds, main = 'favorite season',
 # 5. 산포 : 주어진 자료에 있는 값들이 퍼져 있는 정도
 #    분산 : 주어진 자료의 각각의 값이 평균으로부터 떨어져 있는 정도를 계산하여 합산한 후 값들의 개수로
 #           나누어 계산
-#   표준편차 : 분산의 제곱근으로 계산
+#   표준편차 : 분산의 제곱근(루트)으로 계산
+#                                                     시각화는 히스토그램과 상자 그래프를 사용
 
+
+weight <- c(60,62,64,65,68,69)
+weight
+
+weight.heavy <- c(weight,120)   # 이상치값 존재하므로 평균치가 정확하지 않음
+weight.heavy
+
+# 평균                           # 평균값은 차이가 크다 64, 72
+mean(weight)
+mean(weight.heavy)
+
+# 중앙값                   # 중앙값은 거의 비슷함 64.5, 65
+median(weight)
+median(weight.heavy)
+
+# 절사평균
+mean(weight,trim = 0.2)           # 상,하위 20% 잘라낸 값들의 평균
+mean(weight.heavy, trim = 0.2)
+
+# 사분위수
+quantile(weight.heavy)               # 최소값 ~ 최대값(0%,25%,50%,75%,100%)
+quantile(weight.heavy,(0:10)/ 10)
+# (0:10) / 10 : 구간을 몇개로 나눌것인지를 지정
+# 0.1 ~ 1.0 사이 백분율로 10% ~ 100%
+summary(weight.heavy)
 
