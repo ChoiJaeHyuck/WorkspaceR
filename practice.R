@@ -1232,4 +1232,15 @@ boxplot(dist,main = '자동차 제동거리 ')   # 박스 중간 굵은선 : 중
                                           # 박스 상단선 : 3사분위, 맨위에 동그라미 : 특이값(개수마다 찍힘)
                                           # 구체적인 값은 알 수가 없다.
 
-##
+boxplot.stats(dist)
+boxplot.stats(dist)$status
+boxplot.stats(dist)$n
+boxplot.stats(dist)$conf
+boxplot.stats(dist)$out
+
+# 일변량 연속형 데이터중 그룹으로 구성된 자료의 상자 그래프
+boxplot(Petal.Length,Species, data = iris,
+        main = '품종형 꽃잎 길이')
+        
+# 한 화면에 여러 그래프 작성
+par(mfrow = c(1,3))
