@@ -1239,8 +1239,71 @@ boxplot.stats(dist)$conf
 boxplot.stats(dist)$out
 
 # 일변량 연속형 데이터중 그룹으로 구성된 자료의 상자 그래프
+
 boxplot(Petal.Length,Species, data = iris,
         main = '품종형 꽃잎 길이')
         
 # 한 화면에 여러 그래프 작성
-par(mfrow = c(1,3))
+
+par( mfrow = c( 1, 3 ) )   # 1 x 3 가상화면 분할
+barplot(table( mtcars$carb ), main = "C", xlab = 'carburetors', ylab = 'freq', col = 'blue' )
+barplot(table( mtcars$cyl ), main = 'Cyl', xlab = 'cyl', ylab = 'freq', col = 'red' )
+barplot( table( mtcars$gear ), main = 'g', xlab = 'gear', ylab = 'freq', col = 'green' )
+par( mfrow = c( 1, 1 ) ) # 가상화면 분할 해제
+
+# 2.1 다중변수 자료탐색
+#
+# - 다중변수(다변량) 자료는 변수가 2개 이상인 자료                                     # 2개의 변수는 이변량
+# - 다중변수 자료는 2차원형태, matrix나 data frame에 저장하여 분석
+# - 다중변수 자료에서 변수는 열(Column), 개별 관측값들이 행(row)으로 구성
+
+# 산점도(scatter plot) : 2개의 변수로 구성된 자료의 분포를 알아보는 그래프.
+#                       관측값들의 분포를 2개의 변수 사이의 관계를 파악할 수 있는기법
+# - 산점도는 두 변수의 데이터 분포를 나타내는 것이기 때문에 두 개의 변수에 대한 자료가 필요
+# - 산점도는 관측값들의 분포를 보면서 두 변수 사이의 관련성을 확인하는데 사용
+
+str(mtcars)
+
+# 두 변수(이변량)에 대한 산점도
+
+wt <- mtcars$wt
+wt
+mpg <- mtcars$mpg
+mpg
+
+plot(wt,mpg,main="중량-연비 그래프",xlab="중량",ylab="연비(MPG)",col="red",pch=19) # plot() : 산점도 함수, pch : 그래프 상의 점의 모양
+                                                                                   #          앞에 있는게 x축, 뒤에 있는게 y축           
+plot(mtcars$wt,mtcars$mpg,main="중량-연비 그래프",xlab="중량",ylab="연비(MPG)",col="red",pch=19)
+
+plot(mtcars[,c("wt","mpg")],main="중량-연비 그래프",xlab="중량",ylab="연비(MPG)",col="red",pch=19)
+
+plot(mpg~wt,data=mtcars,main="중량-연비 그래프",xlab="중량",ylab="연비(MPG)",col="red",pch=19)  # 결과는 다 동일함(다른 방식)
+
+# - pairs()는 여러 개의 변수에 대해 짝지어진 산점도 작성
+# - 다중 산점도는 대각선을 기준으로 오른쪽 위의 산점도들과 왼쪽 아래의 산점도들이 대칭을 이룬다.
+# (동일한 산점도인데 x축과 y축이 바뀌어 있다.)
+# - 다중 산점도는 여러 변수들 간의 추세를 한눈에 파악할 수 있다.
+
+# 2개 이상의 변수(다변량)에 대한 산점도
+
+vars <- c("mpg","disp","drat","wt")
+target <- mtcars[,vars]
+head(target)
+
+pairs(target,main="muiti plots") # 그래프들이 대칭형태(x,y축이 바뀐 형태들을 보여줌)
+
+plot(target,main="muiti plots") # 결과는 pair와 plot이 같음.
+
+# - 두 개의 변수에 대한 산점도를 작성할 때 그룹 정보를 알고 있다면 작성시 각 그룹별 관측값들에 대해 서로
+#   다른 색과 점의 모양으로 표시할 수 있다. 두 변수 간의 관계뿐만 아니라 그룹 간의 관계도 파악 할 수 있다.
+
+iris.2 <- iris[,3:4]
+point <- as.numeric(iris$Species)
+point
+
+color <- c("red","green","blue")
+
+plot(iris.2, main = "Iris plot", pch=c(point), col=color[point])
+
+# y=wx + b ( w=기울기, b=절편) : 회귀식(직선의 방정식)
+
