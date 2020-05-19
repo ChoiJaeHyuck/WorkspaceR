@@ -1271,8 +1271,11 @@ wt
 mpg <- mtcars$mpg
 mpg
 
-plot(wt,mpg,main="중량-연비 그래프",xlab="중량",ylab="연비(MPG)",col="red",pch=19) # plot() : 산점도 함수, pch : 그래프 상의 점의 모양
-                                                                                   #          앞에 있는게 x축, 뒤에 있는게 y축           
+plot(wt,mpg,main="중량-연비 그래프",xlab="중량",ylab="연비(MPG)",col="red",pch=19) 
+
+# plot() : 산점도 함수, pch : 그래프 상의 점의 모양
+# 앞에 있는게 x축, 뒤에 있는게 y축    
+
 plot(mtcars$wt,mtcars$mpg,main="중량-연비 그래프",xlab="중량",ylab="연비(MPG)",col="red",pch=19)
 
 plot(mtcars[,c("wt","mpg")],main="중량-연비 그래프",xlab="중량",ylab="연비(MPG)",col="red",pch=19)
@@ -1306,4 +1309,168 @@ color <- c("red","green","blue")
 plot(iris.2, main = "Iris plot", pch=c(point), col=color[point])
 
 # y=wx + b ( w=기울기, b=절편) : 회귀식(직선의 방정식)
+
+# 2.2 상관분석
+
+# - 두 변수간의 관계를 분석시 추세의 모양이 선의 형태를 갖는 것을 선형적 관계라 표현한다.
+# - 선형적 관계는 강한 선형적 관계가 있고 약한 선형적 관계까 있다.
+
+# - 상관분석(correlation analysis) : 얼마나 선형성을 보이는지 수치상으로 나타내는 방법
+# - 상관계수(correlation coefficient)는 선형성의 정도를 나타내는 척도
+
+# - 상관계수 r의 성질
+
+#   -1 <= r <= 1
+#   r > 0 : 양의 상관계수(x가 증가하면 y도 증가)    
+#   r < 0 : 음의 상관계수(x가 증가하면 y는 감소)
+#   r이 1이나 -1에 가까울수록 x,y의 상관성이 높다.  (보통 0.5나 -0.5가 넘으면 상관관계가 높다고 본다.)
+
+# - 상관계수 값이 1이나 -1에 가까울수록 관측값들의 분포가 직선에 가까워진다. 
+
+beers <- c(5,2,9,8,3,7,3,5,3,5)                                 # 음주량
+bal <- c(0.1,0.03,0.19,0.12,0.04,0.0095,0.07,0.06,0.02,0.05)    # 알코올 농도
+tbl <- data.frame(beers,bal)
+
+plot(bal~beers, data=tbl)                # 산점도 그리기               # 순서 중요
+res <- lm(bal~beers, data=tbl)           # 회귀식 도출(y=wx+b)
+abline(res)                              # 회귀선 그리기
+cor(beers, bal)                          # 상관계수 계산      # 결론 : 양의 상관관계가 높다.
+ 
+par(mfrow=c(1,2))
+plot(wt~mpg, data=mtcars,main="중량-연비 그래프",xlab="중량",ylab="연비(mpg)",col="red",pch=19)
+res <-  lm(wt~mpg, data=mtcars)
+abline(res)
+
+plot(drat~wt,data=mtcars,main="리어액슬기어비-중량 그래프",xlab="리어액슬기어비",
+     ylab="중량",col="red",pch=19)
+res <- lm(drat~wt, data=mtcars)
+abline(res)
+par(mfrow=c(1,1))
+
+cor(mtcars$wt, mtcars$mpg)
+cor(mtcars$drat,mtcars$wt)
+cor(iris[,1:4])
+
+# 시계열 자료(times series data) : 시간의 변화에 따라 자료를 수집한 경우
+
+# 선그래프 : 다중변수 자료의 변수 중 하나가 연월일과 같이 시간을 나타내는 값을 갖는 경우
+#            x축을 시간축으로 하여 시간의 변화에 따른 자료의 증감 추이를 확인할 때 사용
+
+month <- 1:12
+late <- c(5,8,7,9,4,6,12,13,8,6,6,4)
+plot(month,                                   # x data
+     late,                                    # y data
+     main = "지각생 통계",                    # 제목
+     type ="o",                               # 그래프 종류(l,b,s,o)
+     lty = 1,                                 # 선의종류
+     lwd = 1,                                 # 선의 굵기
+     xlab = "Month",                          # x축 레이블
+     ylab ="Late cnt")                        # y축 레이블
+
+month <- 1:12
+late1 <- c(5,8,7,9,4,6,12,13,8,6,6,4)
+late2 <- c(4,6,5,8,7,8,10,11,6,5,7,3)
+plot(month,                                   # x data
+     late1,                                   # y data
+     main = "지각생 통계",                    # 제목
+     type ="o",                               # 그래프 종류(l,b,s,o)
+     lty = 1,                                 # 선의종류
+     lwd = 1,                                 # 선의 굵기
+     col="red",
+     ylim = c(1,15),                                           
+     xlab="Month",                            # x축 레이블                                                                                                                                                                                                                                                                                                                                
+     ylab="Late cnt")                         # y축 레이블
+lines(month, late2, type = "o",col="blue")
+
+# Big Data 분석과정
+
+# 1. 문제정의
+# 2. Data 수집
+# 3. Data 전처리
+# 4. 탐색적 Data 분석(EDA)
+# 5. Data 분석(Data Model 구축)
+# 6. 결과
+
+# 2.3 
+
+# 1. 분석 대상 데이터셋 준비
+# Boston Housing 데이터셋 활용
+install.packages("mlbench")
+
+library(mlbench)
+data("BostonHousing")
+myds <- BostonHousing[,c("crim","rm","dis","tax","medv")]
+
+myds
+class(myds)
+dim(myds)
+str(myds)
+head(myds)
+
+# 2. 필요한 변수 추가 - 선택적으로 수행
+
+# crim : 지역 1인당 범죄율, rm : 주택 1가구당 방의 개수
+# dis : 보스턴 5개 직업 센터까지 거리
+# tax : 재산세율,mydv : 주택가격
+
+grp <- c()
+for(i in 1:nrow(myds)){
+    if(myds$medv[i]>=25.0){
+        grp[i] <- "H"
+    }else if (myds$medv[i]<=17.0){
+        grp[i] <- "L"
+    }else{
+        grp[i] <- "M"
+    }
+}
+grp <- factor(grp)
+grp <- factor(grp,levels=c("H","M","L"))
+
+myds <- data.frame(myds,grp)
+
+# 3. 데이터셋 형태와 기본적인 내용 파악
+str(myds)
+head(myds)
+table(grp)
+
+# 4.히스토그램을 이용한 관측값 분포 확인
+
+par(mfrow=c(2,3))
+for(i in 1:5){
+    hist(myds[,i],main=colnames(myds)[i],
+         col="yellow")
+}
+par(mfrow=c(1,1))
+
+# 5. 상자 그래프에 의한 관측값 분포 확인
+
+par(mfrow = c(2,3))
+for (i in 1:5) {
+    boxplot(myds[,i],main=colnames(myds)[i])
+}
+par(mfrow = c(1,1))
+
+# 6. 그룹별 관측값 분포 확인
+
+boxplot(myds$crim~myds$grp, main="1인당 범죄율")
+boxplot(myds$rm~myds$grp,main="방의 개수")
+
+# 7. 다중 산점도를 이용한 변수간 상관 관계 확인
+
+pairs(myds[,-6])
+
+# 8. 그룹 정보를 포함한 변수 간 상관관계 확인
+
+point <- as.integer(myds$grp)
+color <- c("red","green","blue")
+pairs(myds[,-6],pch=point,col=color[point])
+
+# 9. 변수 간 상관 계수 확인
+
+cor(myds[ ,-6 ] )
+
+# 실습 도로교통공단_시도_시군구별_월별_교통사고(2018)이용한 EDA 실습
+
+
+
 
