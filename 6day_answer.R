@@ -380,3 +380,4 @@ lines( local.gu.index, seoul.1, type = "b", col = "blue" )
 lines( local.gu.index, seoul.2, type = "b", col = "black" )
 
 par( mfrow = c( 1, 1 ) )
+
