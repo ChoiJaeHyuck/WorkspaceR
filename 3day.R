@@ -145,6 +145,8 @@ z
 x <- 1:4
 y <- 5:8
 z <- matrix( 1:20, nrow = 4, ncol = 5 )
+x
+y
 
 m1 <- cbind( x, y )
 m1
@@ -280,7 +282,7 @@ head( iris )
 
 tail( state.x77 )
 tail( iris )
-
+iris
 unique( iris[, 5 ] )
 
 table( iris[ , 5 ] )
