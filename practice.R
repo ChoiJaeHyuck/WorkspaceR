@@ -2095,6 +2095,9 @@ text( UScrime$U2, UScrime$y,                       # 문자출력 x, y위치
 
 # googlevis : google이 제공하는 패키지
 
+install.packages("googleVis")
+library(googleVis)
+
 # 2.3 Markdown 사용법 ( 보고서 작성에 이용)
 
 # Markdown : 쉽게 문서를 작성하여 HTML, PDF, Word와 같은 문서도구에 표현할 수 있도록 하는 문서 작성 언어
