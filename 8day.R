@@ -251,6 +251,7 @@ ggplot( df, aes( x = month, y = rain ) ) +
                             colour = "steelblue" ) ) +
     labs( x = "월", y = "강수량" ) +
     coord_flip()
+
 # ggtitle() : 그래프 제목
 # labs() : x축, y축 레이블 지정
 # theme() : 지정된 그래프에 대한 제목의 폰트크기, 색등 지정
