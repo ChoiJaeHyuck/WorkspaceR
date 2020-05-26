@@ -1,33 +1,37 @@
+
+
+# 주제 : 이글스 군단의 가성비 갑은 누구?
+
+
+
 # data 읽기
+
+
 
 setwd("C:\\Workspace\\WorkspaceR")
 baseball <- read.csv( 'C:\\Workspace\\WorkspaceR\\batter_stats_2017.csv', header = T )
-baseball
+
+
+
 
 # data 구조 확인
+
+
 
 class(baseball)   # data.frame
 str(baseball)     # 191 obs, 21 variables
 dim(baseball)
 
-baseball$선수 <-  as.character( baseball$선수 )
+baseball$선수명 <-  as.character( baseball$선수명 )
 baseball$팀명 <-  as.character( baseball$팀명 )
 str(baseball)
 
-# 결측치 확인
 
-is.na(baseball)
-sum(is.na(baseball))   # 결측치 0개
 
-# 특이값 찾기
-
-boxplot.stats( baseball$경기 )$out   # 특이값 0
-boxplot.stats( baseball$타석 )$out   # 특이값 0 
-boxplot.stats( baseball$타수 )$out   # 특이값 0
-boxplot.stats( baseball$안타 )$out   # 특이값 0
-boxplot.stats( baseball$홈런 )$out   # 특이값 0
 
 # 팀명 나누기
+
+
 
 team <- c()
 for ( i in 1:nrow( baseball ) ) {
@@ -55,7 +59,11 @@ for ( i in 1:nrow( baseball ) ) {
 }
 team      
 
+
+
 # 선수, 팀명 이름 분리
+
+
 
 name <- unique( baseball[ , 1] )
 name
@@ -63,198 +71,383 @@ team2 <- unique( baseball[ , 2 ] )
 team2
 
 
+
+
 # 한화 데이터 분리
+
+
 
 hanwha <- baseball[ baseball$팀명 == team2[ 9 ],]   # 숫자 바꾸면 해당 팀의 데이터 출력, 한화 = 9
 hanwha
 dim(hanwha)    
 str(hanwha)    
 head(hanwha)
+tail(hanwha)
+
+
+
+# 결측치 확인
+
+
+
+is.na(hanwha) 
+sum(is.na(hanwha))   # 결측치 0개
+
+
+
+# 특이값 찾기
+
+
+
+boxplot.stats( hanwha$홈런 )$out          # 특이값 21(이성열)
+boxplot.stats( hanwha$OPS )$out           # 특이값 0 
+boxplot.stats( hanwha$WAR )$out           # 특이값 3.01(정근우), 2.96(김태균), 2.53(이성열)
+boxplot.stats( hanwha$연봉.2018.)$out      # 특이값 70000(정근우), 160000(김태균), 40000(이용규)
+
+
 
 # 한화 선수 분리
+
+
 
 library( dplyr )
 
 hanwha.player <- hanwha %>% select(선수명)
 hanwha.player
+length(hanwha.player$선수명)                       # 한화 선수 19명
 
-# 한화 선수별 타석 정리
 
-player.bat <- hanwha %>% select(타석)
-player.bat
-
-a <- hanwha %>% select(선수명, 타석)          # 선수명, 타석 vector
-a
-
-max(player.bat)
-min(player.bat)
-mean(player.bat$타석)
-median(player.bat$타석)
-quantile(player.bat$타석)
-
-player.bat2 <- player.bat[,1]                        # 벡터형 변환
-player.bat2
-
-table( player.bat2 )                                 # 도수분포
-pie( player.bat2, main = "선수별 타석" )
-
-boxplot.stats(player.bat2)  
-
-ggplot( a, aes( y = 타석 ) ) +                       # 상자그림
-    geom_boxplot( fill = "orange" )
-
-hist( player.bat2, main = "한화 선수 타석 빈도수",        # 히스토그램
-      xlab = "타석", ylab = "빈도수",
-      border = "black", col = "orange",
-      las = 1, breaks = 5 )
-
-ggplot( a, aes( x = 선수명, y = 타석 ) ) +           # 막대그래프
-    geom_bar( stat = "identity",      
-              width = 0.7,            
-              fill = "orange" ) +   
-    ggtitle( "선수별 타석" ) + 
-    theme( plot.title = element_text( size = 25,
-                                      face = "bold",
-                                      colour = "black" ) ) +
-    labs( x = "선수", y = "타석" ) +
-    coord_flip()
-
-library( treemap )
-
-treemap( a, index = c( "선수명", "타석" ),            # 나무 지도
-         vSize = "타석",
-         vColor = "타석",
-         type = "value",
-         bg.labels = "orange" )
-
-# 한화 선수별 안타 정리
-
-single.hit <- hanwha %>% select(안타)    
-single.hit
-
-b <- hanwha %>% select(선수명, 안타)
-b
-
-single.hit2 <- single.hit[,1]
-single.hit2
-
-max(single.hit)
-min(single.hit)
-mean(single.hit$안타)
-median(single.hit$안타)
-quantile( single.hit$안타)
-
-table( single.hit2 )                                 # 도수분포
-
-boxplot.stats(single.hit2)  
-
-ggplot( b, aes( y = 안타 ) ) +                       # 상자그림
-    geom_boxplot( fill = "orange" )
-
-hist( single.hit2, main = "한화 선수 안타 빈도수",        # 히스토그램
-      xlab = "안타", ylab = "빈도수",
-      border = "black", col = "orange",
-      las = 1, breaks = 5 )
-
-ggplot( b, aes( x = 선수명, y = 안타 ) ) +           # 막대그래프
-    geom_bar( stat = "identity",      
-              width = 0.7,            
-              fill = "orange" ) +   
-    ggtitle( "선수별 안타" ) + 
-    theme( plot.title = element_text( size = 25,
-                                      face = "bold",
-                                      colour = "black" ) ) +
-    labs( x = "선수", y = "안타" ) +
-    coord_flip()
-
-library( treemap )
-
-treemap( b, index = c( "선수명", "안타" ),            # 나무 지도
-         vSize = "안타",
-         vColor = "안타",
-         type = "value",
-         bg.labels = "orange" )
 
 # 한화 선수별 홈런 정리
 
-homerun <- hanwha %>% select(홈런)
+
+
+select <- dplyr::select                                 # 패키지끼리 충돌시 사용
+
+homerun <- hanwha %>% select(선수명, 홈런)          # 선수명 & 홈런
 homerun
-
-c <- hanwha %>% select(선수명, 홈런)
-c
-
-max(homerun)
-min(homerun)
+homerun %>% arrange(desc(홈런)) %>% head
 mean(homerun$홈런)
-median(homerun$홈런)
 quantile(homerun$홈런)
 
-homerun2 <- homerun[,1]                        # 벡터형 변환
+
+homerun2 <- homerun[,2]                        # 벡터형 변환
 homerun2
 
 table( homerun2 )                                 # 도수분포
 
 boxplot.stats(homerun2)  
 
-ggplot( c, aes( y = 홈런 ) ) +                       # 상자그림
-    geom_boxplot( fill = "orange" )
+library(ggplot2)
 
-hist( homerun2, main = "한화 선수 홈런 빈도수",        # 히스토그램
+ggplot( homerun, aes( y = 홈런 ) ) +                       # 상자그림
+  geom_boxplot( fill = "orange" )
+
+hist( homerun2, main = "한화 선수 홈런 ",        # 히스토그램
       xlab = "홈런", ylab = "빈도수",
       border = "black", col = "orange",
       las = 1, breaks = 5 )
 
-ggplot( c, aes( x = 선수명, y = 홈런 ) ) +           # 막대그래프
-    geom_bar( stat = "identity",      
-              width = 0.7,            
-              fill = "orange" ) +   
-    ggtitle( "선수별 홈런" ) + 
-    theme( plot.title = element_text( size = 25,
-                                      face = "bold",
-                                      colour = "black" ) ) +
-    labs( x = "선수", y = "홈런" ) +
-    coord_flip()
+ggplot( homerun, aes( x = 선수명, y = 홈런 ) ) +           # 막대그래프
+  geom_bar( stat = "identity",      
+            width = 0.8,            
+            fill = "orange" ) +   
+  ggtitle( "선수별 홈런" ) + 
+  theme( plot.title = element_text( size = 20,
+                                    face = "bold",
+                                    colour = "black" ) ) +
+  labs( x = "선수", y = "홈런" ) +
+  coord_flip()
 
 library( treemap )
 
-treemap( c, index = c( "선수명", "홈런" ),            # 나무 지도
+treemap( homerun, index = c( "선수명", "홈런" ),            # 나무 지도
          vSize = "홈런",
          vColor = "홈런",
          type = "value",
          bg.labels = "orange" )
 
-# 한화 선수들의 타석 별 안타 정리
+library( MASS )
+
+radius <- sqrt( homerun$홈런 ) # 원의 반지름
+symbols( homerun$홈런, homerun$y, # x, y 좌표 위치
+         circle = radius,       # 원의 반지름
+         inches = 0.4,          # 원의 크기 조절값
+         fg = "black", bg = "orange", # 원 테두리, 바탕색
+         lwd = 1.5,             # 원의 테두리선 두께
+         xlab = "한화 선수", # x축 설명
+         ylab = "홈런 개수",               # y축 설명
+         main = "한화 선수 별 홈런" )            # 제목
+text( homerun$홈런, homerun$y,      # 문자 출력 x, y 위치
+      1:nrow( homerun ),          # 문자로 출력할 값
+      cex = 0.8,                  # 글자 크기
+      col = "black" )             # 글자 색
+
+
+
+# 한화 선수별 OPS 정리 ( OPS : 출루율과 장타율의 합, 타자의 성적 요약 지표 )
+
+
+
+OPS <- hanwha %>% select(선수명, OPS)          # 선수명 & OPS
+OPS
+OPS %>% arrange(desc(OPS)) %>% head
+mean(OPS$OPS)
+quantile(OPS$OPS)
+
+OPS2<- OPS[,2]                        # 벡터형 변환
+OPS2
+
+table( OPS2 )                                 # 도수분포
+
+boxplot.stats(OPS2)  
+
+ggplot( OPS, aes( y = OPS ) ) +                       # 상자그림
+  geom_boxplot( fill = "orange" )
+
+hist( OPS2, main = "한화 선수 ops ",        # 히스토그램
+      xlab = "OPS", ylab = "빈도수",
+      border = "black", col = "orange",
+      las = 1, breaks = 5 )
+
+ggplot( OPS, aes( x = 선수명, y = OPS ) ) +           # 막대그래프
+  geom_bar( stat = "identity",      
+            width = 0.8,            
+            fill = "orange" ) +   
+  ggtitle( "선수별 ops" ) + 
+  theme( plot.title = element_text( size = 20,
+                                    face = "bold",
+                                    colour = "black" ) ) +
+  labs( x = "선수", y = "OPS" ) +
+  coord_flip()
+
+treemap( OPS, index = c( "선수명", "OPS" ),            # 나무 지도
+         vSize = "OPS",
+         vColor = "OPS",
+         type = "value",
+         bg.labels = "orange" )
+
+radius <- sqrt( OPS$OPS ) # 원의 반지름
+symbols( OPS$OPS, OPS$y, # x, y 좌표 위치
+         circle = radius,       # 원의 반지름
+         inches = 0.2,          # 원의 크기 조절값
+         fg = "black", bg = "orange", # 원 테두리, 바탕색
+         lwd = 1.5,             # 원의 테두리선 두께
+         xlab = "한화 선수", # x축 설명
+         ylab = "OPS",
+         main = "한화 선수 별 ops")               # y축 설명)           # 제목
+text( OPS$OPS, OPS$y,      # 문자 출력 x, y 위치
+      1:nrow( OPS ),          # 문자로 출력할 값
+      cex = 0.8,                  # 글자 크기
+      col = "black" )             # 글자 색
+
+
+
+# 한화 선수별 WAR 정리 ( WAR : 승리기여도 )
+
+
+
+WAR <- hanwha %>% select(선수명, WAR)          # 선수명 & WAR
+WAR
+WAR %>% arrange(desc(WAR)) %>% head
+mean(WAR$WAR)
+quantile(WAR$WAR)
+
+WAR2 <- WAR[,2]                        # 벡터형 변환
+WAR2
+
+table( WAR2 )                                 # 도수분포
+
+boxplot.stats(WAR2)  
+
+ggplot( WAR, aes( y = WAR ) ) +                       # 상자그림
+  geom_boxplot( fill = "orange" )
+
+hist( WAR2, main = "한화 선수 war ",        # 히스토그램
+      xlab = "WAR", ylab = "빈도수",
+      border = "black", col = "orange",
+      las = 1, breaks = 5 )
+
+ggplot( WAR, aes( x = 선수명, y = WAR ) ) +           # 막대그래프
+  geom_bar( stat = "identity",      
+            width = 0.8,            
+            fill = "orange" ) +   
+  ggtitle( "선수별 war" ) + 
+  theme( plot.title = element_text( size = 20,
+                                    face = "bold",
+                                    colour = "black" ) ) +
+  labs( x = "선수", y = "war" ) +
+  coord_flip()
+
+
+
+
+# 한화 선수별 연봉.2018.정리
+
+
+
+annual.income <- hanwha %>% select(선수명,연봉.2018. )          # 선수명 & 홈런
+annual.income
+annual.income %>% arrange(desc(연봉.2018.)) %>% head
+mean(annual.income$연봉.2018.)
+quantile(annual.income$연봉.2018)
+
+
+annual.income2 <- annual.income[,2]                        # 벡터형 변환
+annual.income2
+
+table( annual.income2 )                                 # 도수분포
+
+boxplot.stats(annual.income2)  
+
+library(ggplot2)
+
+ggplot( annual.income, aes( y = 연봉.2018. ) ) +                       # 상자그림
+  geom_boxplot( fill = "orange" )
+
+hist( annual.income2, main = "한화 선수 연봉.2018. ",        # 히스토그램
+      xlab = "연봉.2018.", ylab = "빈도수",
+      border = "black", col = "orange",
+      las = 1, breaks = 5 )
+
+ggplot( annual.income, aes( x = 선수명, y = 연봉.2018. ) ) +           # 막대그래프
+  geom_bar( stat = "identity",      
+            width = 0.8,            
+            fill = "orange" ) +   
+  ggtitle( "선수별 연봉.2018." ) + 
+  theme( plot.title = element_text( size = 20,
+                                    face = "bold",
+                                    colour = "black" ) ) +
+  labs( x = "선수", y = "연봉.2018." ) +
+  coord_flip()
+
+treemap( annual.income, index = c( "선수명", "연봉.2018." ),            # 나무 지도
+         vSize = "연봉.2018.",
+         vColor = "연봉.2018.",
+         type = "value",
+         bg.labels = "orange" )
+
+
+radius <- sqrt( annual.income$연봉.2018. ) # 원의 반지름
+symbols( annual.income$연봉.2018., annual.income$y, # x, y 좌표 위치
+         circle = radius,       # 원의 반지름
+         inches = 0.4,          # 원의 크기 조절값
+         fg = "black", bg = "orange", # 원 테두리, 바탕색
+         lwd = 1.5,             # 원의 테두리선 두께
+         xlab = "한화 선수", # x축 설명
+         ylab = "연봉.2018.",               # y축 설명
+         main = "한화 선수 별 연봉.2018." )            # 제목
+text( annual.income$연봉.2018., annual.income$y,      # 문자 출력 x, y 위치
+      1:nrow( annual.income ),          # 문자로 출력할 값
+      cex = 0.8,                  # 글자 크기
+      col = "black" )             # 글자 색
+
+
+
+# 변수들 간의 상관관계 분석( 홈런, OPS, WAR, 연봉.2018. ) : 그룹별 관측값 분포 확인, 다중 산점도
+
+
 
 library( corrplot )
 
-plot( player.bat2, single.hit2,             # 상관도
-      main = "타석 - 안타 그래프",
-      xlab = "타석",
-      ylab = "안타",
-      col = "red",
+H.O <- data.frame( homerun, OPS)
+H.O
+H.O.D <- H.O[,-c(1,3)]                           # 복수 열(선수명) 제거
+H.O.D
+
+plot( 홈런~OPS, data= H.O,                       # OPS - 홈런 상관도
+      main = " OPS - 홈런 그래프",
+      xlab = "OPS",
+      ylab = "홈런",
+      col = "orange",
       pch = 19)
 
+res.a <- lm( 홈런~OPS, data = H.O.D )            # 회귀식 도출
+
+abline( res.a )                                  # 회귀선 그리기
+
+cor( H.O.D$홈런, H.O.D$OPS )                     # 상관계수 : 0.6962551
+
+O.W <- data.frame( OPS, WAR)
+O.W
+O.W.D <- O.W[,-c(1,3)]                           # 복수 열(선수명) 제거
+O.W.D
+
+plot( OPS~WAR, data= O.W,                        # OPS - WAR 상관도
+     main = " WAR - OPS 그래프",
+     xlab = "WAR",
+     ylab = "OPS",
+     col = "orange",
+     pch = 19)
+
+res.b <- lm( OPS~WAR, data = O.W.D )                 # 회귀식 도출
+
+abline( res.b )                                      # 회귀선 그리기
+
+cor( O.W.D$WAR, O.W.D$OPS )                          # 상관계수 : 0.6847353
+
+hanwha
+W.2018 <- data.frame( WAR, annual.income )
+W.2018
+W.2018.D <- W.2018[,-c(1,3)]                                # 복수 열(선수명) 제거
+W.2018.D
+
+plot( WAR~연봉.2018., data = W.2018,                        # WAR - 연봉.2018. 상관도
+     main = " 연봉.2018. - WAR 그래프",
+     xlab = "연봉.2018.",
+     ylab = "WAR.",
+     col = "orange",
+     pch = 19)
+
+res.c <- lm( WAR~연봉.2018., data = W.2018.D )            # 회귀식 도출
+
+abline( res.c )                                           # 회귀선 그리기
+
+cor( W.2018.D$WAR, W.2018.D$연봉.2018. )                  # 0.6800321
 
 
 
+# Data.frame 변수 그룹 묶기
 
 
 
+group <- hanwha[,c("홈런","OPS","WAR","연봉.2018.")]         # 사용할 변수 그룹 지정
+group
 
-# 6. 서울 월별 사고 건수 
+par( mfrow = c( 2, 2 ) )                                     # 변수별 히스토그램
+for ( i in 1:4 ){
+  hist( group[ , i ], main = colnames( group )[ i ],
+        col = "orange" )}
 
-seoul.accident <- c()
-for ( i in 1:length( month.index ) ) {
-    seoul.accident[ i ] <- sum( subset( local.seoul, month == i )$발생건수 )
+for ( i in 1:4 ) {                                           # 상자 그래프에 의한 관측값 분포 확인
+  boxplot( group[ , i ], main = colnames( group )[ i ] )
 }
-names( seoul.accident ) <- month
-seoul.accident
 
-max.month <- max( seoul.accident )
-max.month.name <- names( seoul.accident[ seoul.accident == max.month ] )
-min.month <- min( seoul.accident )
-min.month.name <- names( seoul.accident[ seoul.accident == min.month ] )
-cat( "서울 사고 발생이 최고인 월 : ", max.month.name, " [ ", max.month, " ]", "\n", 
-     "서울 사고 발생이 최저인 월 : ", min.month.name, " [ ", min.month, " ]" )
+par( mfrow = c( 1, 1 ) )
 
-barplot( seoul.accident, main = "서울시 월별 발생 건수" )
+
+
+# 그룹별 관측값 분포 확인
+
+
+
+boxplot( group$OPS~group$WAR, main = "WAR - OPS" )                         # OPS : 1.0 이하
+boxplot( group$홈런~group$연봉.2018., main = "연봉 - 홈런" )
+
+
+pairs( group[ , -6 ] )                                                     # 다중 산점도(변수 간 상관관계)
+
+pairs(~홈런+OPS+WAR+연봉.2018., main = "variables of Hanwha", pch = 21, bg = c("Purple","Red","green"), data = group)   # 다중 산점도 색 입히기
+
+cor( group[ , -6 ] )                                                       # 변수들 간의 상관계수 종합
+
+
+
+
+# 결론
+
+
+
+# 한화 이글스 선수들을 4가지 변수(홈런, OPS(출루율과 장타율의 합, 타자의 성적 요약 지표), WAR(승리 기여도), 연봉.2018.)으로
+# 분석해 본 결과 홈런(21개, 1등), OPS(0.960, 1등), WAR(2.53, 3등)은 구단 내 최상위권 이고 연봉(25000)은 적절한 이성열 선수가 
+# 가장 가성비 좋은 선수라고 볼 수 있다.
